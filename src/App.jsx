@@ -3,7 +3,7 @@ import './App.css'
 import SearchComponent from './Components/SearchComponent'
 import MovieCard from './Components/MovieCard';
 import { useDebounce } from 'react-use';
-import { UpdateSearchedMovie } from './services/AppWork';
+import { getTrendingMovies, UpdateSearchedMovie } from './services/AppWork';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const API_OPTIONS = {
@@ -21,6 +21,7 @@ const App = () => {
   const [movieList, setMovieList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [debounceSearchTerm, setDebounceSearchTerm] = useState("");
+  const [trendingMovies, setTrendingMovies] = useState("");
 
   //here debounce prevent you from requesting too many API requests
   //by waiting for the user to wait abit (500 second);
@@ -43,8 +44,11 @@ const App = () => {
         return;
       }
       setMovieList(data.results || []);
+
       if(query && data.results.length > 0){
-        UpdateSearchedMovie(query, data.results[0]);
+        //console.log(query);
+        //console.log(data.results[0]);
+        await UpdateSearchedMovie(query, data.results[0]);
       }
     }catch(error){
       console.log(`movie error ${error}`);
@@ -54,9 +58,23 @@ const App = () => {
     }
   }
 
+  const loadTrendingMovies = async () => {
+    try{
+      const movies = await getTrendingMovies();
+      if(movies.length > 0) setTrendingMovies(movies);
+      else setTrendingMovies("No Trending Movies.")
+    }catch(error){
+      console.log(`error occurred while fetching trending movies ${error}`);
+    }
+  }
+
   useEffect(() => {
     fetchMovies(debounceSearchTerm);
   }, [debounceSearchTerm]);
+
+  useEffect(() => {
+    loadTrendingMovies();
+  }, [])
 
   return (
     <main>
@@ -67,8 +85,22 @@ const App = () => {
           <SearchComponent searchText={searchText} setSearchTerm={setSearchTerm} />
         </header>
 
+        {trendingMovies.length > 0 && (
+          <section className="trending">
+            <h2>Trending Movies</h2>
+            <ul>
+              {trendingMovies.map((movie, index) => (
+                <li key={movie.$id}>
+                  <p>{index + 1}</p>
+                  <img src={movie.poster_url} alt={movie.title} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <section className="all-movies">
-          <h2 className="mt-[40px]">All Movies</h2>
+          <h2 className="">All Movies</h2>
           {isLoading ? (<p className="text-white">Loading....</p>) : errorMessage ? (<p className="text-red-500">{errorMessage}</p>) : (
             <div className="movies-grid">
               {movieList.map((movie) => (<MovieCard key={movie.id} movie={movie} />))}

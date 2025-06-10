@@ -22,10 +22,21 @@ export const UpdateSearchedMovie = async (searchTerm, movie) => {
                 count: 1,
                 movie_id: movie.id,
                 poster_url: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-            })
+            });
         }
     }catch(error){
         console.log(error);
     }
     //console.log(`User Id: ${APPWORK_USER_ID}, database id: ${APPWORK_DATABASE_ID}, collection id: ${APPWORK_COLLECTION_ID}`);
+}
+
+export const getTrendingMovies = async () => {
+    try{
+        const result = await database.listDocuments(APPWORK_DATABASE_ID, APPWORK_COLLECTION_ID, [
+            Query.limit(5), Query.orderDesc("count")
+        ]);
+        return result.documents;
+    }catch(error){
+        console.log(error);
+    }
 }
