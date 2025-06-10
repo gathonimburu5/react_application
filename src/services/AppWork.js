@@ -10,15 +10,15 @@ const client = new Client()
 
 const database = new Databases(client);
 
-export const UpdateSearchedMovie = async (searchText, movie) => {
+export const UpdateSearchedMovie = async (searchTerm, movie) => {
     try{
-        const result = await database.listDocuments(APPWORK_DATABASE_ID, APPWORK_COLLECTION_ID, [Query.equal('search_term', searchText)]);
+        const result = await database.listDocuments(APPWORK_DATABASE_ID, APPWORK_COLLECTION_ID, [Query.equal('searchTerm', searchTerm)]);
         if(result.documents.length > 0){
             const doc = result.documents[0];
             await database.updateDocument(APPWORK_DATABASE_ID, APPWORK_COLLECTION_ID, doc.$id, {count: doc.count + 1});
         }else{
             await database.createDocument(APPWORK_DATABASE_ID, APPWORK_COLLECTION_ID, ID.unique(), {
-                search_term: searchText,
+                searchTerm,
                 count: 1,
                 movie_id: movie.id,
                 poster_url: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`

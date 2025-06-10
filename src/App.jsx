@@ -70,11 +70,13 @@ const App = () => {
         <section className="all-movies">
           <h2 className="mt-[40px]">All Movies</h2>
           {isLoading ? (<p className="text-white">Loading....</p>) : errorMessage ? (<p className="text-red-500">{errorMessage}</p>) : (
-            <ul>
+            <div className="movies-grid">
               {movieList.map((movie) => (<MovieCard key={movie.id} movie={movie} />))}
-            </ul>
+            </div>
           ) }
         </section>
+
+
       </div>
     </main>
   )
