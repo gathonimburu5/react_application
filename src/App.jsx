@@ -88,14 +88,14 @@ const App = () => {
         {trendingMovies.length > 0 && (
           <section className="trending">
             <h2>Trending Movies</h2>
-            <ul>
+            <div className="movies-grid">
               {trendingMovies.map((movie, index) => (
                 <li key={movie.$id}>
                   <p>{index + 1}</p>
                   <img src={movie.poster_url} alt={movie.title} />
                 </li>
               ))}
-            </ul>
+            </div>
           </section>
         )}
 

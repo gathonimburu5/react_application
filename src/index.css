@@ -53,6 +53,15 @@
   box-sizing: border-box;
 }
 
+.movies-grids {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .movie-info {
   padding: 1rem;
   flex: 1;

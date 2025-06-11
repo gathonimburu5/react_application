@@ -4,9 +4,7 @@ const APPWORK_USER_ID = import.meta.env.VITE_APPWORK_USER_ID;
 const APPWORK_DATABASE_ID = import.meta.env.VITE_APPWORK_DATABASE_ID;
 const APPWORK_COLLECTION_ID = import.meta.env.VITE_APPWORK_COLLECTION_ID;
 
-const client = new Client()
-    .setEndpoint("http://cloud.appwrite.io/v1")
-    .setProject(APPWORK_USER_ID);
+const client = new Client().setEndpoint("https://cloud.appwrite.io/v1").setProject(APPWORK_USER_ID);
 
 const database = new Databases(client);
 
@@ -33,7 +31,7 @@ export const UpdateSearchedMovie = async (searchTerm, movie) => {
 export const getTrendingMovies = async () => {
     try{
         const result = await database.listDocuments(APPWORK_DATABASE_ID, APPWORK_COLLECTION_ID, [
-            Query.limit(5), Query.orderDesc("count")
+            Query.limit(3), Query.orderDesc("count")
         ]);
         return result.documents;
     }catch(error){
